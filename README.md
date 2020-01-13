@@ -1,1 +1,1 @@
-# Kyu-System
+# Kyumee - Queue & Ranking System

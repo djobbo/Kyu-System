@@ -34,7 +34,6 @@ const PlayerType = new GraphQLObjectType({
     name: 'Player',
     fields: ( ) => ({
         id: { type: GraphQLID },
-        name: { type: GraphQLString },
         userID: { type: GraphQLString },
         user: {
             type: UserType,
@@ -138,6 +137,13 @@ const RootQuery = new GraphQLObjectType({
             type: GraphQLList(UserType),
             resolve(parent, args){
                 return User.find({});
+            }
+        },
+        userViaDiscord: {
+            type: UserType,
+            args: { id: { type: GraphQLID } },
+            resolve(parent, args){
+                return User.findOne({ discordID: args.id });
             }
         },
         player: {

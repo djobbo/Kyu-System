@@ -1,0 +1,42 @@
+{
+  "name": "kyu-system",
+  "version": "1.0.0",
+  "description": "Kyumee Client",
+  "main": "app.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlfieGoldson/Kyu-System.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-boost": "^0.4.7",
+    "graphql": "^14.5.8",
+    "react": "^16.12.0",
+    "react-apollo": "^3.1.3",
+    "react-dom": "^16.12.0",
+    "react-scripts": "^3.3.0",
+    "recompose": "^0.30.0"
+  },
+  "bugs": {
+    "url": "https://github.com/AlfieGoldson/Kyu-System/issues"
+  },
+  "homepage": "https://github.com/AlfieGoldson/Kyu-System#readme",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

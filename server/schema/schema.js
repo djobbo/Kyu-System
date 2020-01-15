@@ -23,9 +23,8 @@ const UserType = new GraphQLObjectType({
         discordID: { type: GraphQLString },
         players: {
             type: GraphQLList(PlayerType),
-            resolve(parent, args) {
-                return Player.find({ userID: parent.id });
-            }
+            resolve: (parent, args) =>
+                Player.find({ userID: parent.id })
         }
     })
 });
@@ -38,21 +37,18 @@ const PlayerType = new GraphQLObjectType({
         bracket: { type: GraphQLString },
         user: {
             type: UserType,
-            resolve(parent, args) {
-                return User.findById(parent.userID);
-            }
+            resolve: (parent, args) =>
+                User.findById(parent.userID)
         },
         queues: {
             type: GraphQLList(QueueType),
-            resolve(parent, args) {
-                return Player.find({ playerID: parent.id });
-            }
+            resolve: (parent, args) =>
+                Player.find({ playerID: parent.id })
         },
         teams: {
             type: GraphQLList(TeamType),
-            resolve(parent, args) {
-                return Team.find({ playerIDs: parent.id });
-            }
+            resolve: (parent, args) =>
+                Team.find({ playerIDs: parent.id })
         }
     })
 });
@@ -67,15 +63,13 @@ const QueueType = new GraphQLObjectType({
         matchID: { type: GraphQLString },
         player: {
             type: PlayerType,
-            resolve(parent, args) {
-                return Player.findById(parent.playerID);
-            }
+            resolve: (parent, args) =>
+                Player.findById(parent.playerID)
         },
         match: {
             type: PlayerType,
-            resolve(parent, args) {
-                return Player.findById(parent.matchID);
-            }
+            resolve: (parent, args) =>
+                Player.findById(parent.matchID)
         },
     })
 });
@@ -88,15 +82,13 @@ const TeamType = new GraphQLObjectType({
         bracket: { type: GraphQLString },
         players: {
             type: GraphQLList(PlayerType),
-            resolve(parent, args) {
-                return Player.find({ '_id': { $in: parent.playerIDs } });
-            }
+            resolve: (parent, args) =>
+                Player.find({ '_id': { $in: parent.playerIDs } })
         },
         matches: {
             type: GraphQLList(MatchType),
-            resolve(parent, args) {
-                return Match.find({ teamIDs: parent.id });
-            }
+            resolve: (parent, args) =>
+                Match.find({ teamIDs: parent.id })
         }
     })
 });
@@ -111,15 +103,13 @@ const MatchType = new GraphQLObjectType({
         score: { type: GraphQLString },
         teams: {
             type: GraphQLList(TeamType),
-            resolve(parent, args) {
-                return Team.find({ '_id': { $in: parent.teamIDs } });
-            }
+            resolve: (parent, args) =>
+                Team.find({ '_id': { $in: parent.teamIDs } })
         },
         queues: {
             type: GraphQLList(QueueType),
-            resolve(parent, args) {
-                return Queue.find({ matchID: parent.id });
-            }
+            resolve: (parent, args) =>
+                Queue.find({ matchID: parent.id })
         }
     })
 });
@@ -130,74 +120,63 @@ const RootQuery = new GraphQLObjectType({
         user: {
             type: UserType,
             args: { id: { type: GraphQLID } },
-            resolve(parent, args) {
-                return User.findById(args.id);
-            }
+            resolve: (parent, args) =>
+                User.findById(args.id)
         },
         users: {
             type: GraphQLList(UserType),
-            resolve(parent, args) {
-                return User.find({});
-            }
+            resolve: (parent, args) =>
+                User.find({})
         },
         userViaDiscord: {
             type: UserType,
             args: { id: { type: GraphQLID } },
-            resolve(parent, args) {
-                return User.findOne({ discordID: args.id });
-            }
+            resolve: (parent, args) =>
+                User.findOne({ discordID: args.id })
         },
         player: {
             type: PlayerType,
             args: { id: { type: GraphQLID } },
-            resolve(parent, args) {
-                return Player.findById(args.id);
-            }
+            resolve: (parent, args) =>
+                Player.findById(args.id)
         },
         players: {
             type: GraphQLList(PlayerType),
-            resolve(parent, args) {
-                return Player.find({});
-            }
+            resolve: (parent, args) =>
+                Player.find({})
         },
         queue: {
             type: QueueType,
             args: { id: { type: GraphQLID } },
-            resolve(parent, args) {
-                return Queue.findById(args.id);
-            }
+            resolve: (parent, args) =>
+                Queue.findById(args.id)
         },
         queues: {
             type: GraphQLList(QueueType),
-            resolve(parent, args) {
-                return Queue.find({});
-            }
+            resolve: (parent, args) =>
+                Queue.find({})
         },
         team: {
             type: TeamType,
             args: { id: { type: GraphQLID } },
-            resolve(parent, args) {
-                return Team.findById(args.id);
-            }
+            resolve: (parent, args) =>
+                Team.findById(args.id)
         },
         teams: {
             type: GraphQLList(TeamType),
-            resolve(parent, args) {
-                return Team.find({});
-            }
+            resolve: (parent, args) =>
+                Team.find({})
         },
         match: {
             type: MatchType,
             args: { id: { type: GraphQLID } },
-            resolve(parent, args) {
-                return Match.findById(args.id);
-            }
+            resolve: (parent, args) =>
+                Match.findById(args.id)
         },
         matchs: {
             type: GraphQLList(MatchType),
-            resolve(parent, args) {
-                return Match.find({});
-            }
+            resolve: (parent, args) =>
+                Match.find({})
         }
     }
 });
@@ -211,13 +190,11 @@ const Mutation = new GraphQLObjectType({
                 name: { type: GraphQLNonNull(GraphQLString) },
                 discordID: { type: GraphQLNonNull(GraphQLString) }
             },
-            resolve(parent, args) {
-                let user = new User({
+            resolve: (parent, args) =>
+                new User({
                     name: args.name,
                     discordID: args.discordID
-                });
-                return user.save();
-            }
+                }).save()
         },
         addPlayer: {
             type: PlayerType,
@@ -225,19 +202,17 @@ const Mutation = new GraphQLObjectType({
                 userID: { type: GraphQLNonNull(GraphQLID) },
                 bracket: { type: GraphQLNonNull(GraphQLString) }
             },
-            resolve(parent, args) {
-                Player.findOne({ userID: args.userID, bracket: args.bracket }).then(player => {
-                    if (player) return player;
-                    else {
-                        console.log(player)
-                        player = new Player({
-                            userID: args.userID,
-                            bracket: args.bracket
-                        });
-                        return player.save();
-                    }
-                });
-            }
+            resolve: (parent, args) =>
+                Player.findOne({ userID: args.userID, bracket: args.bracket })
+                    .then(player => {
+                        return player ?
+                            player :
+                            new Player({
+                                userID: args.userID,
+                                bracket: args.bracket
+                            }).save()
+                    })
+                    .catch(console.error)
         },
         addQueue: {
             type: QueueType,
@@ -247,15 +222,12 @@ const Mutation = new GraphQLObjectType({
                 state: { type: GraphQLNonNull(GraphQLString) },
                 matchID: { type: GraphQLString }
             },
-            resolve(parent, args) {
-                let queue = new Queue({
-                    playerID: args.playerID,
-                    bracket: args.bracket,
-                    state: args.state,
-                    matchID: args.matchID
-                });
-                return queue.save();
-            }
+            resolve: (parent, args) => new Queue({
+                playerID: args.playerID,
+                bracket: args.bracket,
+                state: args.state,
+                matchID: args.matchID
+            }).save()
         },
         addTeam: {
             type: TeamType,
@@ -263,13 +235,17 @@ const Mutation = new GraphQLObjectType({
                 playerIDs: { type: GraphQLNonNull(GraphQLList(GraphQLID)) },
                 bracket: { type: GraphQLNonNull(GraphQLString) }
             },
-            resolve(parent, args) {
-                return Team.findOne({ playerIDs: args.playerIDs, bracket: args.bracket }) ||
-                    new Team({
-                        playerIDs: args.playerIDs,
-                        bracket: args.bracket
-                    }).save();
-            }
+            resolve: (parent, args) =>
+                Team.findOne({ playerIDs: args.playerIDs, bracket: args.bracket })
+                    .then(team => {
+                        return team ?
+                            team :
+                            new Team({
+                                playerIDs: args.playerIDs,
+                                bracket: args.bracket
+                            }).save();
+                    })
+                    .catch(console.error)
         },
         addMatch: {
             type: MatchType,
@@ -279,15 +255,13 @@ const Mutation = new GraphQLObjectType({
                 states: { type: GraphQLNonNull(GraphQLString) },
                 score: { type: GraphQLString }
             },
-            resolve(parent, args) {
-                let match = new Match({
+            resolve: (parent, args) =>
+                new Match({
                     teamIDs: args.teamIDs,
                     bracket: args.bracket,
                     states: args.states,
                     score: args.score
-                });
-                return match.save();
-            }
+                }).save()
         }
     }
 });
